@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+
+.btn {
+  @apply bg-indigo-600 rounded text-white transition ease-in-out duration-150;
+}
+
+.btn:hover {
+  @apply bg-indigo-700;
+}
+
+.btn:focus {
+  @apply outline-none shadow-outline;
+}
+
+.label {
+  @apply text-gray-600 text-sm font-semibold;
+}
+
+.input {
+  @apply form-input mt-1 block w-full;
+}
+@tailwind utilities;
