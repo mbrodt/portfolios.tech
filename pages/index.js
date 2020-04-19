@@ -52,30 +52,47 @@ const Index = () => {
 
   React.useEffect(() => {
     graphQLClient.request(GET_PORTFOLIOS_AND_TAGS).then((data) => {
-      setPortfolios(data.portfolios);
-      const tagsWithProperty = data.tags.map((tag) => {
+      const portfoliosWithProperty = data.portfolios.map((portfolio) => {
+        const tags = portfolio.portfolio_tags.map((tag) => tag.tag_value);
         return {
-          ...tag,
-          isActive: false,
+          ...portfolio,
+          tags: tags,
+          isActive: true,
         };
       });
-      setTags(tagsWithProperty);
+      setPortfolios(portfoliosWithProperty);
+      setTags(data.tags);
     });
   }, []);
 
   const addPortfolio = (variables) => {
     console.log("commiting mutation with variables", variables);
     graphQLClient.request(ADD_PORTFOLIO, variables).then((data) => {
-      console.log("returning data", data);
       // TODO show success message and reload page
       close();
     });
   };
 
+  const handleTagClick = (clickedTag) => {
+    const activePortfolios = portfolios.map((portfolio) => {
+      if (portfolio.tags.includes(clickedTag)) {
+        return {
+          ...portfolio,
+          isActive: true,
+        };
+      }
+      return {
+        ...portfolio,
+        isActive: false,
+      };
+    });
+    setPortfolios(activePortfolios);
+  };
+
   return (
     <div className="min-h-screen bg-gray-200">
       <Hero openDialog={open} />
-      <Filtering tags={tags} />
+      {/* <Filtering tags={tags} /> */}
       <Dialog
         aria-label="Add Portfolio dialog"
         className="max-w-lg relative rounded"
@@ -99,13 +116,14 @@ const Index = () => {
             <path d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </button>
-        <AddPortfolio
-          addPortfolio={addPortfolio}
-          tags={tags}
-          setTags={setTags}
-        />
+        <AddPortfolio addPortfolio={addPortfolio} tags={tags} />
       </Dialog>
-      <PortfolioList portfolios={portfolios} />
+      <PortfolioList
+        handleTagClick={handleTagClick}
+        portfolios={portfolios.filter((portfolio) => {
+          return portfolio.isActive;
+        })}
+      />
     </div>
   );
 };
