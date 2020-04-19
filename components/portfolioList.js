@@ -1,5 +1,4 @@
-const PortfolioList = ({ portfolios }) => {
-  console.log("portfolios:", portfolios);
+const PortfolioList = ({ portfolios, handleTagClick }) => {
   return (
     <div className="w-full max-w-7xl mx-auto mt-8">
       <div className="grid grid-cols-3 gap-8">
@@ -39,6 +38,7 @@ const PortfolioList = ({ portfolios }) => {
                 <ul>
                   {tags.map((tag) => (
                     <li
+                      onClick={() => handleTagClick(tag.tag_value)}
                       key={tag.tag_value}
                       className="bg-indigo-200 text-indigo-700 text-xs font-bold uppercase inline-block
 										leading-4 px-2 py-1 mx-1 text-white mt-2 rounded"

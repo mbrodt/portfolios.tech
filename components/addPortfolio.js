@@ -1,6 +1,6 @@
 import Tags from "./tags";
 
-const AddPortfolio = ({ addPortfolio, tags, setTags }) => {
+const AddPortfolio = ({ addPortfolio, tags }) => {
   const [formTags, setFormTags] = React.useState([]);
   const [imgThumb, setImgThumb] = React.useState(null);
   const [state, setState] = React.useState({
@@ -75,8 +75,6 @@ const AddPortfolio = ({ addPortfolio, tags, setTags }) => {
         tag_value: tag.value,
       };
     });
-    console.log("activeTags:", activeTags);
-    console.log("mapped:", mapped);
 
     const portfolio_tags = {
       portfolio_tags: {
@@ -98,8 +96,8 @@ const AddPortfolio = ({ addPortfolio, tags, setTags }) => {
 
   return (
     <div>
-      <h2 class="text-2xl font-bold">Add a portfolio</h2>
-      <p>
+      <h2 className="text-2xl font-bold text-gray-700">Add a portfolio</h2>
+      <p className="text-gray-700">
         It can be your own, or anyone you found online that you think looks cool
       </p>
       <form onSubmit={submit}>
@@ -151,17 +149,19 @@ const AddPortfolio = ({ addPortfolio, tags, setTags }) => {
             Image
           </label>
           {!imgThumb ? (
-            <label class="w-full flex flex-col items-center px-4 py-6 bg-white text-indigo-500 rounded shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-indigo-200 hover:text-indigo-700">
+            <label className="w-full flex flex-col items-center px-4 py-6 bg-white text-indigo-500 rounded tracking-wide uppercase border border-blue cursor-pointer hover:bg-indigo-200 hover:text-indigo-700">
               <svg
-                class="w-8 h-8"
+                className="w-8 h-8"
                 fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
               >
                 <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
               </svg>
-              <span class="mt-2 text-base leading-normal">Select a file</span>
-              <input type="file" class="hidden" onChange={onUploadImage} />
+              <span className="mt-2 text-base leading-normal">
+                Select a file
+              </span>
+              <input type="file" className="hidden" onChange={onUploadImage} />
             </label>
           ) : (
             <img src={imgThumb} alt="Upload preview" />
