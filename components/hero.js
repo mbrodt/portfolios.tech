@@ -7,11 +7,15 @@ const Hero = ({ openDialog }) => (
       style={{ filter: "brightness(0.3)" }}
     />
     <div className="relative text-center text-white">
-      <h1 className="text-6xl font-bold leading-none">Portfolios.tech</h1>
-      <p className="text-2xl">A curated list of technical portfolios</p>
+      <h1 className="text-4xl xl:text-6xl font-bold leading-none">
+        Portfolios.tech
+      </h1>
+      <p className="text-lg sm:text-xl xl:text-2xl mt-2">
+        A curated list of technical portfolios
+      </p>
       <button
         onClick={openDialog}
-        className="btn text-2xl py-3 px-6 font-semibold leading-relaxed mt-6 inline-flex items-center"
+        className="btn  sm:text-2xl py-2 sm:py-3  px-4 sm:px-6 font-semibold leading-relaxed mt-6 inline-flex items-center"
       >
         Add yours{" "}
         <svg
@@ -21,7 +25,7 @@ const Hero = ({ openDialog }) => (
           strokeLinejoin="round"
           strokeWidth="2"
           viewBox="0 0 24 24"
-          className="ml-2 w-6 h-6"
+          className="ml-2 w-4 h-4 sm:w-6 sm:h-6"
         >
           <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
         </svg>

@@ -68,7 +68,7 @@ const Index = () => {
   const addPortfolio = (variables) => {
     console.log("commiting mutation with variables", variables);
     graphQLClient.request(ADD_PORTFOLIO, variables).then((data) => {
-      // TODO show success message and reload page
+      // TODO show success message
       Router.reload();
       close();
     });
@@ -91,7 +91,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-200">
+    <div className="min-h-screen bg-gray-200 pb-24">
       <Hero openDialog={open} />
       <Dialog
         aria-label="Add Portfolio dialog"
