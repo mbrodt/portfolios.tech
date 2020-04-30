@@ -24,7 +24,7 @@ const Index = () => {
 
   const GET_PORTFOLIOS_AND_TAGS = `
 	query Portfolios {
-		portfolios {
+		portfolios(order_by: {created_at: desc}) {
 			title
 			link
 			id
@@ -69,6 +69,7 @@ const Index = () => {
     console.log("commiting mutation with variables", variables);
     graphQLClient.request(ADD_PORTFOLIO, variables).then((data) => {
       // TODO show success message and reload page
+      Router.reload();
       close();
     });
   };
@@ -92,7 +93,6 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gray-200">
       <Hero openDialog={open} />
-      {/* <Filtering tags={tags} /> */}
       <Dialog
         aria-label="Add Portfolio dialog"
         className="max-w-lg relative rounded"
@@ -107,9 +107,9 @@ const Index = () => {
             aria-hidden
             fill="none"
             stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
             viewBox="0 0 24 24"
             className="w-8 h-8 text-gray-500"
           >
@@ -118,6 +118,7 @@ const Index = () => {
         </button>
         <AddPortfolio addPortfolio={addPortfolio} tags={tags} />
       </Dialog>
+
       <PortfolioList
         handleTagClick={handleTagClick}
         portfolios={portfolios.filter((portfolio) => {
