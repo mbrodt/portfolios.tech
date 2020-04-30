@@ -20,4 +20,12 @@
 .input {
   @apply form-input mt-1 block w-full;
 }
+
+.input-error {
+  @apply text-red-600 mt-2 text-sm;
+}
+
+[data-reach-dialog-overlay] {
+  @apply z-10;
+}
 @tailwind utilities;

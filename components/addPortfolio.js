@@ -1,4 +1,5 @@
 import Tags from "./tags";
+import { useForm } from "react-hook-form";
 
 const AddPortfolio = ({ addPortfolio, tags }) => {
   const [formTags, setFormTags] = React.useState([]);
@@ -9,8 +10,8 @@ const AddPortfolio = ({ addPortfolio, tags }) => {
     link: undefined,
     image: undefined, // TODO: default this to some placeholder
   });
-
-  console.log("FORM TAGS", formTags);
+  const [isUploadingImage, setIsUploadingImage] = React.useState(false);
+  const { register, handleSubmit, errors } = useForm();
 
   React.useEffect(() => {
     setFormTags(tags);
@@ -25,6 +26,7 @@ const AddPortfolio = ({ addPortfolio, tags }) => {
   };
 
   const onUploadImage = async (e) => {
+    setIsUploadingImage(true);
     const img = e.target.files[0];
 
     // Create a thumbnail of the image
@@ -48,10 +50,11 @@ const AddPortfolio = ({ addPortfolio, tags }) => {
       ...state,
       image: file.secure_url,
     });
+
+    setIsUploadingImage(false);
   };
 
   const handleTagClick = (clickedTag) => {
-    console.log("CLICKED clickedTag", clickedTag);
     const updatedTags = formTags.map((tag) => {
       if (tag.value === clickedTag) {
         return {
@@ -65,12 +68,23 @@ const AddPortfolio = ({ addPortfolio, tags }) => {
     setFormTags(updatedTags);
   };
 
-  const submit = (e) => {
-    e.preventDefault();
+  const submit = () => {
+    let linkWithProtocol = state.link;
+    const linkStartsWithProtocol =
+      state.link.startsWith("http://") || state.link.startsWith("https://");
+
+    // If the link doesn't start with the protocol, eg. the user just wrote "madsbrodt.com", we add the protocol here
+    if (!linkStartsWithProtocol) {
+      linkWithProtocol = `http://${state.link}`;
+    }
+
+    // Get all the currently active tags for this submission
     const activeTags = formTags.filter((tag) => {
       return tag.isActive;
     });
-    const mapped = activeTags.map((tag) => {
+
+    // Map the active tags to the format expected by the database
+    const mappedTags = activeTags.map((tag) => {
       return {
         tag_value: tag.value,
       };
@@ -78,20 +92,16 @@ const AddPortfolio = ({ addPortfolio, tags }) => {
 
     const portfolio_tags = {
       portfolio_tags: {
-        data: mapped,
+        data: mappedTags,
       },
     };
-    // "portfolio_tags": {"data": [{"tag_value": "Front-End"}, {"tag_value": "Back-End"}] }}
-    // const portfolio_tags = {
-    // 	data: [
 
-    // 	]
-    // }
-    const test = {
+    const newPortfolio = {
       ...state,
+      link: linkWithProtocol,
       ...portfolio_tags,
     };
-    addPortfolio(test);
+    addPortfolio(newPortfolio);
   };
 
   return (
@@ -100,7 +110,7 @@ const AddPortfolio = ({ addPortfolio, tags }) => {
       <p className="text-gray-700">
         It can be your own, or anyone you found online that you think looks cool
       </p>
-      <form onSubmit={submit}>
+      <form onSubmit={handleSubmit(submit)}>
         <div className="flex flex-col mt-4">
           <label className="label" htmlFor="title">
             Title
@@ -110,9 +120,15 @@ const AddPortfolio = ({ addPortfolio, tags }) => {
             placeholder="Include the name of the portfolio creator"
             type="text"
             name="title"
+            ref={register({
+              required: true,
+            })}
             value={state.title}
             onChange={handleChange}
           />
+          {errors.title && (
+            <p className="input-error">This field is required</p>
+          )}
         </div>
         <div className="flex flex-col mt-4">
           <label className="label" htmlFor="description">
@@ -123,9 +139,15 @@ const AddPortfolio = ({ addPortfolio, tags }) => {
             placeholder="A short description"
             type="text"
             name="description"
+            ref={register({
+              required: true,
+            })}
             value={state.description}
             onChange={handleChange}
           />
+          {errors.description && (
+            <p className="input-error">This field is required</p>
+          )}
         </div>
         <div className="flex flex-col mt-4">
           <label className="label" htmlFor="link">
@@ -136,9 +158,17 @@ const AddPortfolio = ({ addPortfolio, tags }) => {
             placeholder="The direct URL to the portfolio"
             type="text"
             name="link"
+            ref={register({
+              required: true,
+            })}
             value={state.link}
             onChange={handleChange}
           />
+          {errors.link && (
+            <p className="input-error">
+              This field is required, and must be a valid link
+            </p>
+          )}
         </div>
         <div className="flex flex-col mt-4">
           <label className="label">Tags</label>
@@ -149,20 +179,33 @@ const AddPortfolio = ({ addPortfolio, tags }) => {
             Image
           </label>
           {!imgThumb ? (
-            <label className="w-full flex flex-col items-center px-4 py-6 bg-white text-indigo-500 rounded tracking-wide uppercase border border-blue cursor-pointer hover:bg-indigo-200 hover:text-indigo-700">
-              <svg
-                className="w-8 h-8"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-              >
-                <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
-              </svg>
-              <span className="mt-2 text-base leading-normal">
-                Select a file
-              </span>
-              <input type="file" className="hidden" onChange={onUploadImage} />
-            </label>
+            <>
+              <label className="w-full flex flex-col items-center px-4 py-6 bg-white text-indigo-500 rounded tracking-wide uppercase border border-blue cursor-pointer hover:bg-indigo-200 hover:text-indigo-700">
+                <svg
+                  className="w-8 h-8"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                </svg>
+                <span className="mt-2 text-base leading-normal">
+                  Select a file
+                </span>
+                <input
+                  type="file"
+                  name="file"
+                  ref={register({
+                    required: true,
+                  })}
+                  className="hidden"
+                  onChange={onUploadImage}
+                />
+              </label>
+              {errors.file && (
+                <p className="input-error">You must upload an image</p>
+              )}
+            </>
           ) : (
             <img src={imgThumb} alt="Upload preview" />
           )}
@@ -170,7 +213,10 @@ const AddPortfolio = ({ addPortfolio, tags }) => {
 
         <button
           type="submit"
-          className="btn mt-8 block w-full text-center px-6 py-4 text-xl leading-6 font-semibold  "
+          className={`btn mt-8 block w-full text-center px-6 py-4 text-xl leading-6 font-semibold ${
+            isUploadingImage ? "cursor-not-allowed opacity-50" : ""
+          }`}
+          disabled={isUploadingImage}
         >
           Submit
         </button>
