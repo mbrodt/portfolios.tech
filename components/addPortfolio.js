@@ -213,7 +213,7 @@ const AddPortfolio = ({ addPortfolio, tags }) => {
 
         <button
           type="submit"
-          className={`btn mt-8 block w-full text-center px-6 py-4 text-xl leading-6 font-semibold ${
+          className={`btn mt-4 sm:mt-8 block w-full text-center px-6 py-4 text-xl leading-6 font-semibold ${
             isUploadingImage ? "cursor-not-allowed opacity-50" : ""
           }`}
           disabled={isUploadingImage}

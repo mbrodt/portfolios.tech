@@ -95,7 +95,7 @@ const Index = () => {
       <Hero openDialog={open} />
       <Dialog
         aria-label="Add Portfolio dialog"
-        className="max-w-lg relative rounded"
+        className="max-w-95vw sm:max-w-lg relative rounded p-4 sm:p-8"
         isOpen={showDialog}
         onDismiss={close}
       >
