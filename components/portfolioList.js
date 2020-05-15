@@ -12,7 +12,7 @@ const PortfolioList = ({ portfolios, handleTagClick }) => {
             portfolio_tags: tags,
           } = portfolio;
           return (
-            <div key={id} className="rounded bg-white shadow-2xl">
+            <div key={id} className="rounded bg-gray-300 shadow-2xl">
               <div className="relative flex justify-center items-center h-48 lg:h-64 group bg-cover">
                 <div
                   className="w-full h-full absolute group-hover:opacity-25 transition-opacity ease-in duration-150"
