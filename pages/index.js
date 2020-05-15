@@ -91,7 +91,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-200 pb-24">
+    <div className="min-h-screen bg-gray-100 pb-24">
       <Hero openDialog={open} />
       <Dialog
         aria-label="Add Portfolio dialog"
@@ -118,7 +118,7 @@ const Index = () => {
         </button>
         <AddPortfolio addPortfolio={addPortfolio} tags={tags} />
       </Dialog>
-
+      <Filtering handleTagClick={handleTagClick} tags={tags} />
       <PortfolioList
         handleTagClick={handleTagClick}
         portfolios={portfolios.filter((portfolio) => {
